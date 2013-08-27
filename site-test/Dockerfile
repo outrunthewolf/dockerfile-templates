@@ -18,7 +18,6 @@ RUN echo "$USERNAME:$PASSWORD" | chpasswd
 RUN su $USERNAME
 
 # Create some git shizzle
-RUN cd
 RUN git init
-RUN git add remote origin GIT_REMOTE_ORIGIN
-RUN git clone GIT_BASE_FILES
+RUN git remote add origin $GIT_REMOTE_ORIGIN
+RUN git clone $GIT_BASE_FILES /home/$USERNAME

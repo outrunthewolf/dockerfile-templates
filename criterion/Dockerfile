@@ -21,7 +21,16 @@ RUN a2enmod rewrite
 RUN echo "VARIOUS BITS AND BOBS" > /etc/apache2/sites-enabled/default
 RUN service apache2 restart
 
-# Expose ports http, ssh
-EXPOSE 8080
-EXPOSE 22
+# git clone criterion
+RUN mkdir /home/sites
+RUN git clone https://github.com/romhut/criterion.git /home/sites/criterion
+RUN cd /home/sites/criterion
+RUN composer install && bin/cli install
+
+# Set up a host in the apache2 vhost map
+# vhosting is defined in the base apache2 setup
+RUN echo $SITENAME $SITEPATH > /home/vhost.map
+
+# Restart apache
+
 

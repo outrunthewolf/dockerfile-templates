@@ -2,7 +2,7 @@
 
 Dockerfiles for various stacks, and builds
 
-## Apache2, PHP, Composer ##
+## base-apache2 ##
 
 A base Dockerfile running, I use these base Dockerfiles as templates for the various stacks I work with
 

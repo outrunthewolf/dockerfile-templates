@@ -1,5 +1,5 @@
 # Base Ubuntu 12.04 Image
-# Apache2, php5, composer, mongodb
+# Apache2, php5, composer
 # outrunthewolf
 
 # Base Docker File
@@ -17,43 +17,28 @@ RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/bin/composer
 
 # Set up the vhosting for apache2 and enable any mods
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+ENV APACHE_LOG_DIR /var/log/apache2
+
 RUN a2enmod rewrite
-RUN echo "
-<VirtualHost *:80>
-        ServerAdmin developers@some-site.com
-        DocumentRoot /home
-        UseCanonicalName Off
 
-        RewriteEngine on
+# Create the mass vhost
+ADD ./config/default_vhost /etc/apache2/sites-enabled/default
 
-        RewriteMap lowercase int:tolower
+# touch the local vhost
+RUN touch /home/vhost.map
 
-        RewriteMap vhost txt:/home/vhost.map
-
-        RewriteCond %{REQUEST_URI} !^/cgi-bin/
-        RewriteCond ${lowercase:%{SERVER_NAME}} ^(.+)$
-        RewriteCond ${vhost:%1} ^(/.*)$
-        RewriteRule ^/(.*)$ %1/$1
-
-        RewriteCond %{REQUEST_URI} ^/cgi-bin/
-        RewriteCond ${lowercase:%{SERVER_NAME}} ^(.+)$
-        RewriteCond ${vhost:%1} ^(/.*)$
-        RewriteRule ^/(.*)$ %1/cgi-bin/$1
-
-        ErrorLog /var/log/apache2/error.log
-
-        # Possible values include: debug, info, notice, warn, error, crit,
-        # alert, emerg.
-        LogLevel alert
-
-        CustomLog /var/log/apache2/access.log combined
-
-</VirtualHost>
-" > /etc/apache2/sites-enabled/default
+# enable the default site
 RUN a2ensite default
+
+# restart apache
 RUN service apache2 restart
 
 # Expose ports http, ssh
-EXPOSE 8080
-EXPOSE 22
+EXPOSE 80
+
+# Make sure the container is running something
+ENTRYPOINT ["/usr/sbin/apache2"]
+CMD ["-D", "FOREGROUND"]
 

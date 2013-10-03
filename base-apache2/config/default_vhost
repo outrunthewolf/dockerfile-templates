@@ -1,0 +1,29 @@
+<VirtualHost *:80> 
+        ServerAdmin developers@daykinandstorey.co.uk 
+        DocumentRoot /home 
+        UseCanonicalName Off 
+
+        RewriteEngine on
+
+        RewriteMap lowercase int:tolower
+
+        RewriteMap vhost txt:/home/vhost.map
+
+        RewriteCond %{REQUEST_URI} !^/cgi-bin/
+        RewriteCond ${lowercase:%{SERVER_NAME}} ^(.+)$
+        RewriteCond ${vhost:%1} ^(/.*)$
+        RewriteRule ^/(.*)$ %1/$1
+
+        RewriteCond %{REQUEST_URI} ^/cgi-bin/
+        RewriteCond ${lowercase:%{SERVER_NAME}} ^(.+)$
+        RewriteCond ${vhost:%1} ^(/.*)$
+        RewriteRule ^/(.*)$ %1/cgi-bin/$1
+
+        ErrorLog /var/log/apache2/error.log
+
+        # Possible values include: debug, info, notice, warn, error, crit,
+        # alert, emerg.
+        LogLevel alert
+
+        CustomLog /var/log/apache2/access.log combined
+</VirtualHost> 

@@ -37,8 +37,5 @@ RUN service apache2 restart
 
 # Expose ports http, ssh
 EXPOSE 80
-
-# Make sure the container is running something
-ENTRYPOINT ["/usr/sbin/apache2"]
-CMD ["-D", "FOREGROUND"]
+EXPOSE 22
 

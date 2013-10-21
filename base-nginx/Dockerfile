@@ -9,9 +9,8 @@ FROM ubuntu:precise
 MAINTAINER outrunthewolf
 
 # ENVIRONMENTAL variables
-ENV USERNAME john
-ENV PASSWORD password
-ENV SITENAME whatever.com
+ENV USERNAME web-user
+ENV PASSWORD eFgHUI895d
 ENV SITEPATH "/home/$USERNAME/public_html"
 
 # create a user

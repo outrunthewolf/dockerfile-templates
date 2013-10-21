@@ -1,20 +1,12 @@
-# Bolt virtual server
+
 server {
     listen 80;
     server_name local.test.com;
-    root /home/john/public_html;
+    root /home/web-user/public_html;
     index index.php index.html;
  
     location / {
         try_files $uri $uri/ /index.php?$query_string;
-    }
- 
-    location ~* /thumbs/(.*)$ {
-        try_files $uri $uri/ /app/classes/timthumb.php?$query_string;
-    }
- 
-    location /app/classes/upload {
-        try_files $uri $uri/ /app/classes/upload/index.php?$query_string;
     }
  
     location ~* \.(?:ico|css|js|gif|jpe?g|png|ttf|woff)$ {
@@ -33,21 +25,5 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param HTTPS off;
-    }
- 
-    location ~ /\.ht {
-        deny all;
-    }
- 
-    location /app {
-        deny all;
-    }
- 
-    location ~ /vendor {
-        deny all;
-    }
- 
-    location ~ \.db$ {
-        deny all;
     }
 }

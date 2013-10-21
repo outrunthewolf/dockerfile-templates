@@ -1,20 +1,24 @@
 # Base Ubuntu 12.04 Image
-# Nginx, php5, composer, mysql
+# Nginx, php5, composer
 # outrunthewolf
 
 # Base Docker File
 FROM ubuntu:precise
 
+# Maintainer
+MAINTAINER outrunthewolf
+
 # ENVIRONMENTAL variables
-ENV USERNAME chris
+ENV USERNAME john
 ENV PASSWORD password
-ENV SITENAME outrunthewolf.com
+ENV SITENAME whatever.com
 ENV SITEPATH "/home/$USERNAME/public_html"
 
 # create a user
 RUN useradd -d /home/$USERNAME -m $USERNAME
 RUN chsh -s /bin/bash $USERNAME
 RUN echo "$USERNAME:$PASSWORD" | chpasswd
+RUN mkdir /home/$USERNAME/public_html
 
 # Check we've got the lastest distr
 RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
@@ -40,14 +44,22 @@ RUN cd /home/$USERNAME && \
 
 # Set up nginx configurations
 RUN mkdir /usr/local/nginx/conf/sites-available && \
-	mkdir /usr/local/nginx/conf/sites-enabled && \
-	echo "include sites-enabled/default.conf;" > /usr/local/nginx/conf/nginx.conf
+	mkdir /usr/local/nginx/conf/sites-enabled
 
-# Add a default vhost
-ADD ./config/default_vhost /usr/local/nginx/sites-available/default.conf
-RUN ln -s 
+# Add base nginx conf
+ADD ./config/default_nginx_conf /usr/local/nginx/conf/nginx.conf
 
-# Set up php fpm
+# Add a default vhost, activate host file
+ADD ./config/default_vhost /usr/local/nginx/conf/sites-available/default.conf
+RUN ln -s /usr/local/nginx/conf/sites-available/default.conf /usr/local/nginx/conf/sites-enabled/default.conf
 
+# Set up php fpm, restart php
+ADD ./config/default_php_pool /etc/php5/fpm/pool.d/default.conf
+RUN touch /var/log/php-slowlog.log
 
 # Expose some ports
+EXPOSE 80
+
+# Start it running
+CMD service php5-fpm restart && \
+	/usr/local/nginx/sbin/./nginx -c /usr/local/nginx/conf/nginx.conf

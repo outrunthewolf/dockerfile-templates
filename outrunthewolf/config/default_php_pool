@@ -1,6 +1,6 @@
-[local.test.com] 
+[outrunthewolf.com] 
 listen = 127.0.0.1:9000 
-user = web-user
+user = outrunthewolf
 request_slowlog_timeout = 5s
 slowlog = /var/log/php-slowlog.log
 listen.allowed_clients = 127.0.0.1 

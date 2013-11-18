@@ -22,5 +22,3 @@ RUN echo $SITENAME $SITEPATH > /home/vhost.map
 
 # Create some git stuff to bring in a repo if needs be
 # these are examples, perform any manner of GIT/composer magic
-#RUN git init
-#RUN git clone $GIT_BASE_FILES /home/$USERNAME/public_html

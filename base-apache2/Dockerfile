@@ -12,7 +12,7 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt
 RUN apt-get update
 
 # Install any programs needed, including composer
-RUN apt-get install -y git-core apache2 php5 libapache2-mod-php5 nano htop openssh-server curl
+RUN apt-get install -y git-core apache2 php5 libapache2-mod-php5 nano htop openssh-server curl mysql-server php5-mysql libapache2-mod-auth-mysql libapache2-mod-php5 php5-mcrypt
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/bin/composer
 
@@ -37,5 +37,3 @@ RUN service apache2 restart
 
 # Expose ports http, ssh
 EXPOSE 80
-EXPOSE 22
-

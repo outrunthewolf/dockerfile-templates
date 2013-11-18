@@ -1,0 +1,38 @@
+
+server {
+    listen 80;
+    server_name outrunthewolf.com;
+
+    # we return the correct scheme (http, https) and the www here
+    return 301 $scheme://www.$host$request_uri;
+}
+
+server {
+    listen 80;
+    server_name www.outrunthewolf.com;
+
+    root /home/outrunthewolf/public_html;
+    index index.php index.html;
+ 
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+ 
+    location ~* \.(?:ico|css|js|gif|jpe?g|png|ttf|woff)$ {
+        access_log off;
+        expires 30d;
+        add_header Pragma public;
+        add_header Cache-Control "public, mustrevalidate, proxy-revalidate";
+    }
+ 
+    location = /robots.txt { access_log off; log_not_found off; }
+    location = /favicon.ico { access_log off; log_not_found off; }
+ 
+    location ~ \.php$ {
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTPS off;
+    }
+}

@@ -18,7 +18,7 @@ Dockerfiles for various stacks, and builds
 Clone the repository, and inside the correct folder run:
 
 ```
-sudo docker build -t="base/apache2"
+sudo docker build -t base/apache2 .
 ```
 To build the container, you can name the container anything you want, i've chosen base/apache2
 
